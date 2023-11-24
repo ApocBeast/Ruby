@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class EnemyController : MonoBehaviour
 {
@@ -9,6 +10,12 @@ public class EnemyController : MonoBehaviour
     public float changeTime = 3.0f;
 
     public ParticleSystem smokeEffect;
+
+    public TextMeshProUGUI fixedText;
+
+    public GameObject playerCharacter;
+
+    private RubyController rubyController;
     
     Rigidbody2D rigidbody2D;
     float timer;
@@ -23,6 +30,17 @@ public class EnemyController : MonoBehaviour
         rigidbody2D = GetComponent<Rigidbody2D>();
         timer = changeTime;
         animator = GetComponent<Animator>();
+        GameObject rubyControllerObject = GameObject.FindWithTag("RubyController");
+
+        if (rubyControllerObject != null)
+        {
+            rubyController = rubyControllerObject.GetComponent<RubyController>();
+        }
+
+        if (RubyController.fixedRobotsAmount == 0)
+        {
+            fixedText.text = RubyController.fixedRobotsAmount.ToString();
+        }
     }
 
     void Update()
@@ -85,7 +103,13 @@ public class EnemyController : MonoBehaviour
         rigidbody2D.simulated = false;
         //optional if you added the fixed animation
         animator.SetTrigger("Fixed");
-        
         smokeEffect.Stop();
+
+        RubyController.fixedRobotsAmount = RubyController.fixedRobotsAmount +1;
+        fixedText.text = RubyController.fixedRobotsAmount.ToString();
+        if(RubyController.fixedRobotsAmount == rubyController.maxRobots)
+        {
+            rubyController.winScreen();
+        }
     }
 }

@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UIElements;
 
 public class RubyController : MonoBehaviour
 {
@@ -9,6 +11,8 @@ public class RubyController : MonoBehaviour
     public int maxHealth = 5;
     
     public GameObject projectilePrefab;
+    public GameObject winText;
+    public GameObject lossText;
 
     public ParticleSystem healthEffect;
     public ParticleSystem hitEffect;
@@ -19,9 +23,14 @@ public class RubyController : MonoBehaviour
     public int health { get { return currentHealth; }}
     int currentHealth;
     
+    public static int fixedRobotsAmount;
+    public int maxRobots = 2;
+    
     public float timeInvincible = 2.0f;
     bool isInvincible;
     float invincibleTimer;
+
+    bool gameOver;
     
     Rigidbody2D rigidbody2d;
     float horizontal;
@@ -39,6 +48,11 @@ public class RubyController : MonoBehaviour
         animator = GetComponent<Animator>();
         
         currentHealth = maxHealth;
+
+        lossText.SetActive(false);
+        winText.SetActive(false);
+
+        fixedRobotsAmount = 0;
 
         audioSource = GetComponent<AudioSource>();
     }
@@ -67,10 +81,17 @@ public class RubyController : MonoBehaviour
             if (invincibleTimer < 0)
                 isInvincible = false;
         }
+
+        if (health <= 0)
+        {
+            gameOver = true;
+            lossText.SetActive(true);
+        }
         
         if(Input.GetKeyDown(KeyCode.C))
         {
-            Launch();
+            if (gameOver != true)
+                Launch();
         }
         
         if (Input.GetKeyDown(KeyCode.X))
@@ -83,6 +104,18 @@ public class RubyController : MonoBehaviour
                 {
                     character.DisplayDialog();
                 }
+            }
+        }
+        
+        if (gameOver == true)
+        {
+            invincibleTimer = 1.0f;
+            speed = 0.0f;
+
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                // Reload the current scene
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             }
         }
     }
@@ -131,6 +164,15 @@ public class RubyController : MonoBehaviour
         PlaySound(throwSound);
     } 
     
+    public void winScreen()
+    {
+        if (gameOver == false)
+        {
+            gameOver = true;
+            winText.SetActive(true);
+        }
+    }
+
     public void PlaySound(AudioClip clip)
     {
         audioSource.PlayOneShot(clip);
