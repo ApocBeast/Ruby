@@ -11,6 +11,7 @@ public class RubyController : MonoBehaviour
     public int maxHealth = 5;
     
     public GameObject projectilePrefab;
+    public GameObject stunProjectile;
     public GameObject winText;
     public GameObject lossText;
 
@@ -19,18 +20,29 @@ public class RubyController : MonoBehaviour
     
     public AudioClip throwSound;
     public AudioClip hitSound;
+
+    public AudioClip chargeSound;
+    public AudioClip stunThrowSound;
     
     public int health { get { return currentHealth; }}
     int currentHealth;
     
     public static int fixedRobotsAmount;
     public int maxRobots = 2;
+
+    public static int thanksForTalking;
+    public int thankedForTalking = 1;
     
     public float timeInvincible = 2.0f;
+    public bool stunnerOn = false;
     bool isInvincible;
     float invincibleTimer;
+    float stunCogsLeft = 3;
+    float holdDownStartTime;
+    float holdDownEndTime;
 
     bool gameOver;
+    bool noCogs;
     
     Rigidbody2D rigidbody2d;
     float horizontal;
@@ -53,6 +65,7 @@ public class RubyController : MonoBehaviour
         winText.SetActive(false);
 
         fixedRobotsAmount = 0;
+        thanksForTalking = 0;
 
         audioSource = GetComponent<AudioSource>();
     }
@@ -88,10 +101,40 @@ public class RubyController : MonoBehaviour
             lossText.SetActive(true);
         }
         
-        if(Input.GetKeyDown(KeyCode.C))
+        if (Input.GetKeyDown(KeyCode.C))
         {
-            if (gameOver != true)
-                Launch();
+            holdDownStartTime = Time.time;
+
+            if (stunCogsLeft == 0)
+            {
+                noCogs = true;
+            }
+
+            if (stunnerOn == true && noCogs != true)
+            {
+                PlaySound(chargeSound);
+            }
+        }
+        
+            
+        if (Input.GetKeyUp(KeyCode.C))
+        {
+            holdDownEndTime = Time.time;
+
+            audioSource.Stop();
+
+            if(holdDownEndTime - holdDownStartTime > 1f)
+            {
+                if (stunnerOn == true && noCogs != true)
+                {
+                    Launch(stunProjectile);
+                    ChangeStunBar(-1);
+                }
+            }
+                else
+            {
+                Launch(projectilePrefab);
+            }
         }
         
         if (Input.GetKeyDown(KeyCode.X))
@@ -103,6 +146,7 @@ public class RubyController : MonoBehaviour
                 if (character != null)
                 {
                     character.DisplayDialog();
+                    thanksForTalking = 1;
                 }
             }
         }
@@ -152,17 +196,35 @@ public class RubyController : MonoBehaviour
         UIHealthBar.instance.SetValue(currentHealth / (float)maxHealth);
     }
     
-    void Launch()
+    void Launch(GameObject bulletType)
     {
-        GameObject projectileObject = Instantiate(projectilePrefab, rigidbody2d.position + Vector2.up * 0.5f, Quaternion.identity);
+        GameObject projectileObject = Instantiate(bulletType, rigidbody2d.position + Vector2.up * 0.5f, Quaternion.identity);
 
         Projectile projectile = projectileObject.GetComponent<Projectile>();
         projectile.Launch(lookDirection, 300);
 
         animator.SetTrigger("Launch");
-        
-        PlaySound(throwSound);
-    } 
+
+        if(bulletType == stunProjectile)
+        {
+            PlaySound(stunThrowSound);
+        }
+        else
+        {
+            PlaySound(throwSound);
+        }
+    }
+
+    public void ChangeStunBar(float amount)
+    {
+        if(stunCogsLeft == 0)
+        {
+            stunnerOn = false;
+        }
+
+        stunCogsLeft = Mathf.Clamp(stunCogsLeft + amount, 0, 3);
+        UIPowerupBar.instance.SetValue(stunCogsLeft / (float)3f);
+    }
     
     public void winScreen()
     {

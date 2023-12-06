@@ -5,6 +5,9 @@ using UnityEngine;
 public class Projectile : MonoBehaviour
 {
     Rigidbody2D rigidbody2d;
+
+    public GameObject CogBullet;
+    public GameObject StunCog;
     
     void Awake()
     {
@@ -29,9 +32,15 @@ public class Projectile : MonoBehaviour
         EnemyController e = other.collider.GetComponent<EnemyController>();
         if (e != null)
         {
-            e.Fix();
+            if(gameObject == CogBullet)
+            {
+                e.Fix();
+            }
+            else if(gameObject == StunCog)
+            {
+                e.Stun();
+            }
         }
-    
         Destroy(gameObject);
     }
 }

@@ -19,8 +19,10 @@ public class EnemyController : MonoBehaviour
     
     Rigidbody2D rigidbody2D;
     float timer;
+    float storedSpeed;
     int direction = 1;
     bool broken = true;
+    bool stunned = false;
     
     Animator animator;
     
@@ -31,6 +33,7 @@ public class EnemyController : MonoBehaviour
         timer = changeTime;
         animator = GetComponent<Animator>();
         GameObject rubyControllerObject = GameObject.FindWithTag("RubyController");
+        storedSpeed = speed;
 
         if (rubyControllerObject != null)
         {
@@ -57,6 +60,11 @@ public class EnemyController : MonoBehaviour
         {
             direction = -direction;
             timer = changeTime;
+        }
+
+        if(stunned == true)
+        {
+            speed = 0f;
         }
     }
     
@@ -107,9 +115,22 @@ public class EnemyController : MonoBehaviour
 
         RubyController.fixedRobotsAmount = RubyController.fixedRobotsAmount +1;
         fixedText.text = RubyController.fixedRobotsAmount.ToString();
-        if(RubyController.fixedRobotsAmount == rubyController.maxRobots)
+        if(RubyController.fixedRobotsAmount == rubyController.maxRobots && RubyController.thanksForTalking != 0)
         {
             rubyController.winScreen();
         }
+    }
+
+    public void Stun()
+    {
+        stunned = true;
+        StartCoroutine(StunTime());
+    }
+
+    IEnumerator StunTime()
+    {
+        yield return new WaitForSeconds(3);
+        stunned = false;
+        speed = storedSpeed;
     }
 }
