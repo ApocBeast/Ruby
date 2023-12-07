@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
@@ -20,6 +21,7 @@ public class RubyController : MonoBehaviour
     
     public AudioClip throwSound;
     public AudioClip hitSound;
+    public AudioClip winMusic;
 
     public AudioClip chargeSound;
     public AudioClip stunThrowSound;
@@ -41,7 +43,9 @@ public class RubyController : MonoBehaviour
     float holdDownStartTime;
     float holdDownEndTime;
 
-    bool gameOver;
+    public bool gameOver;
+    public bool winConStun = false;
+    public bool winConRobot = false;
     bool noCogs;
     
     Rigidbody2D rigidbody2d;
@@ -115,6 +119,12 @@ public class RubyController : MonoBehaviour
                 PlaySound(chargeSound);
             }
         }
+
+        if (winConStun == false && fixedRobotsAmount == maxRobots)
+        {
+            gameOver = true;
+            lossText.SetActive(true);
+        }
         
             
         if (Input.GetKeyUp(KeyCode.C))
@@ -146,11 +156,18 @@ public class RubyController : MonoBehaviour
                 if (character != null)
                 {
                     character.DisplayDialog();
-                    thanksForTalking = 1;
                 }
             }
         }
         
+        if (gameOver == false)
+        {
+            if (winConStun == true && winConRobot == true)
+            {
+                WinScreen();
+            }
+        }
+
         if (gameOver == true)
         {
             invincibleTimer = 1.0f;
@@ -226,12 +243,13 @@ public class RubyController : MonoBehaviour
         UIPowerupBar.instance.SetValue(stunCogsLeft / (float)3f);
     }
     
-    public void winScreen()
+    public void WinScreen()
     {
         if (gameOver == false)
         {
             gameOver = true;
             winText.SetActive(true);
+            PlaySound(winMusic);
         }
     }
 

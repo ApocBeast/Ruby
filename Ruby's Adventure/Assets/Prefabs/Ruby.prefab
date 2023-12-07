@@ -11,8 +11,6 @@ GameObject:
   - component: {fileID: 8069588869443510658}
   - component: {fileID: 8069588869443510659}
   - component: {fileID: 8069588869443510669}
-  - component: {fileID: 2561688789686241527}
-  - component: {fileID: 4766788485087367635}
   - component: {fileID: 7760357265475247010}
   - component: {fileID: 1678889097766414870}
   - component: {fileID: -6806452111538161307}
@@ -115,42 +113,16 @@ MonoBehaviour:
   hitEffect: {fileID: 8558392218104439542, guid: ceb29c05ef1972e46a09ee8ddc6c116b, type: 3}
   throwSound: {fileID: 8300000, guid: b2edfd40873655249ba0e01a5cf705be, type: 3}
   hitSound: {fileID: 8300000, guid: 9b1bb1f450b7d444fa4a8019d13519a7, type: 3}
+  winMusic: {fileID: 0}
   chargeSound: {fileID: 8300000, guid: 7f4aa26d5b55226409cda231ffaf869b, type: 3}
   stunThrowSound: {fileID: 8300000, guid: cc6699269b4c1d44ea1e860518b9bb73, type: 3}
   maxRobots: 2
+  thankedForTalking: 1
   timeInvincible: 2
   stunnerOn: 0
---- !u!114 &2561688789686241527
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8069588869443510656}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0af853ef52a541a4490e51bc27f2c98c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  normalMoveSpeed: 5
-  staminaBar: {fileID: 0}
---- !u!114 &4766788485087367635
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8069588869443510656}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3503105371fff704e84d057100dcde22, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  staminaBarFill: {fileID: 0}
-  staminaText: {fileID: 0}
-  maxStamina: 100
-  currentStamina: 0
-  staminaRegenRate: 10
+  gameOver: 0
+  winConCat: 0
+  winConRobot: 0
 --- !u!50 &7760357265475247010
 Rigidbody2D:
   serializedVersion: 4

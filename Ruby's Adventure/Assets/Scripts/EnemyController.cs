@@ -12,12 +12,16 @@ public class EnemyController : MonoBehaviour
     public ParticleSystem smokeEffect;
 
     public TextMeshProUGUI fixedText;
+    public TextMeshProUGUI stunnedText;
 
     public GameObject playerCharacter;
 
     private RubyController rubyController;
     
     Rigidbody2D rigidbody2D;
+
+    public AudioClip fixedSound;
+
     float timer;
     float storedSpeed;
     int direction = 1;
@@ -112,18 +116,20 @@ public class EnemyController : MonoBehaviour
         //optional if you added the fixed animation
         animator.SetTrigger("Fixed");
         smokeEffect.Stop();
+        rubyController.PlaySound(fixedSound);
 
         RubyController.fixedRobotsAmount = RubyController.fixedRobotsAmount +1;
         fixedText.text = RubyController.fixedRobotsAmount.ToString();
-        if(RubyController.fixedRobotsAmount == rubyController.maxRobots && RubyController.thanksForTalking != 0)
+        if(RubyController.fixedRobotsAmount == rubyController.maxRobots)
         {
-            rubyController.winScreen();
+            rubyController.winConRobot = true;
         }
     }
 
     public void Stun()
     {
         stunned = true;
+        rubyController.winConStun = true;
         StartCoroutine(StunTime());
     }
 

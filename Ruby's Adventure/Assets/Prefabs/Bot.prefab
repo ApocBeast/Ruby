@@ -176,6 +176,7 @@ MonoBehaviour:
   smokeEffect: {fileID: 2732261383304087047, guid: 67561341ec903d3459a83def06b3440d, type: 3}
   fixedText: {fileID: 0}
   playerCharacter: {fileID: 8069588869443510656, guid: 5904cdf08db447949b89d01bbcb2d678, type: 3}
+  fixedSound: {fileID: 8300000, guid: e7fa1971a86d60945bb64585c0ac14d5, type: 3}
 --- !u!82 &1828234863459840266
 AudioSource:
   m_ObjectHideFlags: 0
